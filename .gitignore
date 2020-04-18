@@ -137,3 +137,9 @@ dmypy.json
 
 # Model Outputs
 *.h5
+
+# project artifacts
+
+model
+images
+labels

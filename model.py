@@ -2,6 +2,7 @@ import multiprocessing
 import os
 import sys
 import time
+import logging
 
 import numpy as np
 import torch
@@ -19,6 +20,12 @@ from torch.utils.data import DataLoader, Dataset
 from PIL import Image
 
 from utils import compute_roc_auc, get_cuda_version, get_cudnn_version, get_gpu_name
+
+logging.basicConfig(
+    level=logging.INFO,
+    filename='model.logs',
+    filemode='w',
+    format='%(message)s')
 
 ############# CONSTANTS
 MULTI_GPU = False
@@ -54,7 +61,6 @@ MODEL_CHKPTS_DIR = MODEL_DIR + 'checkpoints/'
 
 if not os.path.exists(MODEL_CHKPTS_DIR):
     os.makedirs(MODEL_CHKPTS_DIR)
-
 
 ########################
 
@@ -159,7 +165,7 @@ def init_symbol(sym, lr=LR):
     return opt, cri, sch
 
 
-def train_epoch(model, dataloader, optimizer, criterion):
+def train_epoch(model, dataloader, optimizer, criterion, epoch_num):
     model.train()
     # print("Training epoch")
     loss_val = 0
@@ -176,6 +182,8 @@ def train_epoch(model, dataloader, optimizer, criterion):
         loss_val += loss.item()
         loss.backward()
         optimizer.step()
+
+    logging.info('epoch:{0},train:{1.4f}'.format(epoch_num, (loss_val / i)))
     print("Training loss: {0:.4f}".format(loss_val / i))
 
 
@@ -220,20 +228,22 @@ def valid_epoch(model, dataloader, criterion, phase='valid', cl=CLASSES):
     return loss_mean
 
 
-def save_checkpoint(epoch, model, optimizer, loss, is_best):
+def save_checkpoint(epoch, model, optimizer, loss_val, is_best):
     """Save checkpoint if a new best is achieved"""
-    if is_best:
-        print("=> Saving a new best")
-        PATH = MODEL_CHKPTS_DIR + 'epoch{0}_loss{1:.0f}_checkpoint.pth.tar'.format(epoch, loss)
-        # torch.save(state, PATH)  # save checkpoint
-        torch.save({
-            'epoch': epoch,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'loss': loss,
-        }, PATH)
-    else:
+    if not is_best:
         print("=> Validation Accuracy did not improve")
+
+    PATH = MODEL_CHKPTS_DIR + 'epoch{0}_loss{1:.4f}_checkpoint.pth.tar'.format(epoch, loss_val)
+
+    torch.save({
+        'epoch': epoch,
+        'model_state_dict': model.state_dict(),
+        'optimizer_state_dict': optimizer.state_dict(),
+        'loss': loss_val,
+    }, PATH)
+
+
+    logging.info('epoch:{0},val:{1.4f}'.format(epoch, loss_val))
 
 
 def main():
@@ -281,7 +291,7 @@ def main():
         stime = time.time()
         epoch_num = j + 1  # to cater for 0 index in logs
         print('---+---+--- Epoch #{} ---+---+---'.format(epoch_num))
-        train_epoch(chexnet_sym, train_loader, optimizer, criterion)
+        train_epoch(chexnet_sym, train_loader, optimizer, criterion, epoch_num)
         loss_val = valid_epoch(chexnet_sym, valid_loader, criterion)
 
         is_best = bool(loss_val < best_loss_val)
