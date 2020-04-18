@@ -290,7 +290,7 @@ def main():
     for j in range(EPOCHS):
         stime = time.time()
         epoch_num = j + 1  # to cater for 0 index in logs
-        print('---+---+--- Epoch #{} ---+---+---'.format(epoch_num))
+        print('---+---+--- Epoch #{0} of {1} ---+---+---'.format(epoch_num, EPOCHS))
         train_epoch(chexnet_sym, train_loader, optimizer, criterion, epoch_num)
         loss_val = valid_epoch(chexnet_sym, valid_loader, criterion)
 
