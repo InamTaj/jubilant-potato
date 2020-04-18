@@ -183,7 +183,7 @@ def train_epoch(model, dataloader, optimizer, criterion, epoch_num):
         loss.backward()
         optimizer.step()
 
-    logging.info('epoch:{0},train:{1.4f}'.format(epoch_num, (loss_val / i)))
+    logging.info('epoch:{0},train:{1:.4f}'.format(epoch_num, (loss_val / i)))
     print("Training loss: {0:.4f}".format(loss_val / i))
 
 
@@ -243,7 +243,7 @@ def save_checkpoint(epoch, model, optimizer, loss_val, is_best):
     }, PATH)
 
 
-    logging.info('epoch:{0},val:{1.4f}'.format(epoch, loss_val))
+    logging.info('epoch:{0},val:{1:.4f}'.format(epoch, loss_val))
 
 
 def main():
