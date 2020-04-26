@@ -24,18 +24,18 @@ links = [
 
 # list of downloaded files
 files = [
-    'images_001.tar.gz',
-    'images_002.tar.gz',
-    'images_003.tar.gz',
-    'images_004.tar.gz',
-    'images_005.tar.gz',
-    'images_006.tar.gz',
-    'images_007.tar.gz',
-    'images_008.tar.gz',
-    'images_009.tar.gz',
-    'images_010.tar.gz',
-    'images_011.tar.gz',
-    'images_012.tar.gz',
+    'images_01.tar.gz',
+    'images_02.tar.gz',
+    'images_03.tar.gz',
+    'images_04.tar.gz',
+    'images_05.tar.gz',
+    'images_06.tar.gz',
+    'images_07.tar.gz',
+    'images_08.tar.gz',
+    'images_09.tar.gz',
+    'images_10.tar.gz',
+    'images_11.tar.gz',
+    'images_12.tar.gz',
 ]
 
 
