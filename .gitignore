@@ -143,4 +143,5 @@ dmypy.json
 model
 images
 labels
-datasets
+datasets/chexnet/*
+datasets/gulab-devi/*
