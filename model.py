@@ -45,16 +45,36 @@ CLASS_NAMES = [
     'pleural_thickening',
 ]
 
-CLASSES = len(CLASS_NAMES)
+DISEASE_TYPES = [
+    'atelectasis',
+    'cardiomegaly',
+    'effusion',
+    'infiltration',
+    'mass',
+    'nodule',
+    'pneumonia',
+    'pneumothorax',
+    'consolidation',
+    'edema',
+    'emphysema',
+    'fibrosis',   # aka - Fibrotic Scarring
+    'pleural_thickening',
+    'hernia'
+]
+
+CLASSES = len(DISEASE_TYPES)
 
 TIMESTAMP = datetime.now().strftime('%d.%m.%Y_%H.%M.%S')
 
 DIR_PREFIX = './'
 
-DATA_DIR = DIR_PREFIX + 'images'
-TRAIN_IMAGES_LIST = DIR_PREFIX + 'labels/train_list.txt'
-VALDN_IMAGES_LIST = DIR_PREFIX + 'labels/val_list.txt'
-TEST_IMAGES_LIST = DIR_PREFIX + 'labels/test_list.txt'
+DATASET_DIR = DIR_PREFIX + 'datasets/chexnet/'
+
+DATA_DIR = DATASET_DIR + 'images'
+TRAIN_IMAGES_LIST = DATASET_DIR + 'labels/train_list.txt'
+VALDN_IMAGES_LIST = DATASET_DIR + 'labels/val_list.txt'
+TEST_IMAGES_LIST = DATASET_DIR + 'labels/test_list.txt'
+
 MODEL_DIR = DIR_PREFIX + 'model/'
 MODEL_CHKPTS_DIR = MODEL_DIR + 'checkpoints/'
 MODEL_LOGS_DIR   = MODEL_DIR  + 'losses_{}.log'.format(TIMESTAMP)
