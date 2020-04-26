@@ -6,7 +6,7 @@ import tqdm
 ################## CONSTANTS
 CHEXNET_DIR = r'./datasets/chexnet/'
 IMAGES_DIR = CHEXNET_DIR + 'images'
-LABELS_DIR = CHEXNET_DIR + 'labels'
+LABELS_DIR = CHEXNET_DIR + 'full_labels'
 AVAILABLE_LABELS_DIR = CHEXNET_DIR + 'available_labels'
 TRAIN_LIST = LABELS_DIR + '/train_list.txt'
 VAL_LIST = LABELS_DIR + '/val_list.txt'
