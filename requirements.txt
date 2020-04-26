@@ -1,3 +1,5 @@
 Pillow==7.1.1
 scikit-learn==0.22.2.post1
 torch-summary==1.1.6
+tqdm==4.45.0
+

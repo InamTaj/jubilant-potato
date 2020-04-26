@@ -2,6 +2,8 @@
 import time
 import datetime
 import sys
+import shutil
+from tqdm import tqdm
 from urllib import request
 
 # URLs for the zip files
@@ -20,6 +22,23 @@ links = [
     'https://nihcc.box.com/shared/static/ioqwiy20ihqwyr8pf4c24eazhh281pbu.gz'
 ]
 
+# list of downloaded files
+files = [
+    'images_001.tar.gz',
+    'images_002.tar.gz',
+    'images_003.tar.gz',
+    'images_004.tar.gz',
+    'images_005.tar.gz',
+    'images_006.tar.gz',
+    'images_007.tar.gz',
+    'images_008.tar.gz',
+    'images_009.tar.gz',
+    'images_010.tar.gz',
+    'images_011.tar.gz',
+    'images_012.tar.gz',
+]
+
+
 def reporthook(count, block_size, total_size):
     global start_time
     if count == 0:
@@ -34,9 +53,34 @@ def reporthook(count, block_size, total_size):
                     (percent, progress_size / (1024 * 1024), speed, elapsed_time))
     sys.stdout.flush()
 
-for idx, link in enumerate(links):
-    fn = 'images_%02d.tar.gz' % (idx+1)
-    print('downloading', fn, '...')
-    request.urlretrieve(link, fn, reporthook)  # download the zip file
+def download_files():
+    for idx, link in enumerate(links):
+        fn = 'images_%02d.tar.gz' % (idx+1)
+        print('\ndownloading', fn, '...')
+        request.urlretrieve(link, fn, reporthook)  # download the zip file
 
-print ("Download complete. Please check the checksums")
+    print ("Download complete.")
+
+    return True
+
+
+def uncompress_files():
+    print ("Uncompressing files")
+
+    extract_path = './images'
+
+    for filename in tqdm(files):
+        shutil.unpack_archive(filename)
+
+    print ('Extracted all files under: {0}'.format(extract_path))
+
+
+def main():
+    response = download_files()
+
+    if response == True:
+        uncompress_files()
+
+
+if __name__ == '__main__':
+    main()
