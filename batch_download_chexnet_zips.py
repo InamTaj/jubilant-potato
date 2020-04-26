@@ -1,4 +1,5 @@
 # Download the 56 zip files in Images_png in batches
+import os
 import time
 import datetime
 import sys
@@ -38,6 +39,8 @@ files = [
     'images_12.tar.gz',
 ]
 
+DIR_PREFIX = './datasets/chexnet/'
+
 
 def reporthook(count, block_size, total_size):
     global start_time
@@ -55,7 +58,7 @@ def reporthook(count, block_size, total_size):
 
 def download_files():
     for idx, link in enumerate(links):
-        fn = 'images_%02d.tar.gz' % (idx+1)
+        fn = DIR_PREFIX +'images_%02d.tar.gz' % (idx+1)
         print('\ndownloading', fn, '...')
         request.urlretrieve(link, fn, reporthook)  # download the zip file
 
@@ -67,10 +70,13 @@ def download_files():
 def uncompress_files():
     print ("Uncompressing files")
 
-    extract_path = './images'
+    extract_path = DIR_PREFIX + '/images'
 
     for filename in tqdm(files):
-        shutil.unpack_archive(filename)
+        INPUT_PATH = DIR_PREFIX + filename
+
+        if os.path.exists(INPUT_PATH):
+            shutil.unpack_archive(INPUT_PATH, DIR_PREFIX)
 
     print ('Extracted all files under: {0}'.format(extract_path))
 
