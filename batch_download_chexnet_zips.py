@@ -70,14 +70,13 @@ def download_files():
 def uncompress_files():
     print ("Uncompressing files")
 
-    extract_path = DIR_PREFIX + '/images'
-
     for filename in tqdm(files):
         INPUT_PATH = DIR_PREFIX + filename
 
         if os.path.exists(INPUT_PATH):
             shutil.unpack_archive(INPUT_PATH, DIR_PREFIX)
 
+    extract_path = DIR_PREFIX + 'images'
     print ('Extracted all files under: {0}'.format(extract_path))
 
 
