@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import logging
+from datetime import datetime
 
 import numpy as np
 import torch
@@ -12,6 +13,8 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader, Dataset
+from torchsummary import summary
+
 # # import torch.nn.functional as F
 # # import torch.nn.init as init
 # # from torch.autograd import Variable
@@ -20,12 +23,6 @@ from torch.utils.data import DataLoader, Dataset
 from PIL import Image
 
 from utils import compute_roc_auc, get_cuda_version, get_cudnn_version, get_gpu_name
-
-logging.basicConfig(
-    level=logging.INFO,
-    filename='model.logs',
-    filemode='w',
-    format='%(message)s')
 
 ############# CONSTANTS
 MULTI_GPU = False
@@ -50,6 +47,8 @@ CLASS_NAMES = [
 
 CLASSES = len(CLASS_NAMES)
 
+TIMESTAMP = datetime.now().strftime('%d.%m.%Y_%H.%M.%S')
+
 DIR_PREFIX = './'
 
 DATA_DIR = DIR_PREFIX + 'images'
@@ -58,10 +57,25 @@ VALDN_IMAGES_LIST = DIR_PREFIX + 'labels/val_list.txt'
 TEST_IMAGES_LIST = DIR_PREFIX + 'labels/test_list.txt'
 MODEL_DIR = DIR_PREFIX + 'model/'
 MODEL_CHKPTS_DIR = MODEL_DIR + 'checkpoints/'
+MODEL_LOGS_DIR   = MODEL_DIR  + 'losses_{}.log'.format(TIMESTAMP)
 
 if not os.path.exists(MODEL_CHKPTS_DIR):
     os.makedirs(MODEL_CHKPTS_DIR)
 
+######################## LOGGING CONFIGS
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+# create a file handler
+handler = logging.FileHandler(MODEL_LOGS_DIR)
+handler.setLevel(logging.INFO)
+
+# create a logging format
+formatter = logging.Formatter('%(message)s')
+handler.setFormatter(formatter)
+
+# add the file handler to the logger
+logger.addHandler(handler)
 ########################
 
 
@@ -183,7 +197,7 @@ def train_epoch(model, dataloader, optimizer, criterion, epoch_num):
         loss.backward()
         optimizer.step()
 
-    logging.info('epoch:{0},train:{1:.4f}'.format(epoch_num, (loss_val / i)))
+    logger.info('epoch:{0},train:{1:.4f}'.format(epoch_num, (loss_val / i)))
     print("Training loss: {0:.4f}".format(loss_val / i))
 
 
@@ -233,15 +247,17 @@ def save_checkpoint(epoch, model, optimizer, loss_val, is_best):
     if not is_best:
         print("=> Validation Accuracy did not improve")
 
-    PATH = MODEL_CHKPTS_DIR + 'epoch{0}_loss{1:.4f}_checkpoint.pth.tar'.format(epoch, loss_val)
+    else:
+        print("=> Saving a new best")
 
-    torch.save({
-        'epoch': epoch,
-        'model_state_dict': model.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'loss': loss_val,
-    }, PATH)
+        PATH = MODEL_CHKPTS_DIR + 'chkpt_{0}_epoch{1}_loss{2:.4f}_checkpoint.pth.tar'.format(TIMESTAMP, epoch, loss)
 
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': loss_val,
+        }, PATH)
 
     logging.info('epoch:{0},val:{1:.4f}'.format(epoch, loss_val))
 
@@ -279,6 +295,7 @@ def main():
 
     # Load symbol
     chexnet_sym = get_symbol()
+    summary(chexnet_sym, input_data=(CHANNELS, HEIGHT, WIDTH))
 
     # Load optimiser, loss
     # Scheduler for LRPlateau is not used
