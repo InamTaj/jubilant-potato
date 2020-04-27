@@ -304,7 +304,7 @@ def main():
     test_dataset = no_augmentation_dataset(DATA_DIR, TEST_IMAGES_LIST, normalize)
 
     # Optimal to use fewer workers than CPU_COUNT
-    workers = 1 if CPU_COUNT < 2 else CPU_COUNT - 1
+    workers = 1 if CPU_COUNT < 2 else 2
 
     # DataLoaders
     train_loader = DataLoader(dataset=train_dataset, batch_size=BATCHSIZE,
