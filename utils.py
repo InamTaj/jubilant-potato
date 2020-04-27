@@ -5,6 +5,7 @@ import sys
 
 import numpy as np
 from sklearn.metrics import roc_auc_score, accuracy_score
+from sklearn.metrics import classification_report
 
 # import pathlib
 # import subprocess
@@ -103,3 +104,10 @@ def compute_roc_auc(data_gt, data_pd, classes, full=True):
     print("Full AUC", AUROCs)
     AUROCs = np.mean(AUROCs)
     return AUROCs
+
+def get_classification_report(data_gt, data_pd, labels):
+    data_gt_np = np.asarray(data_gt, dtype='int')
+    data_pd_np = np.asarray(data_pd, dtype='int')
+
+    print("Classification Report\n",
+          classification_report(data_gt_np, data_pd_np, labels=[i for i,x in enumerate(labels)]))

@@ -22,7 +22,7 @@ from torchsummary import summary
 # from sklearn.model_selection import train_test_split
 from PIL import Image
 
-from utils import compute_roc_auc, get_cuda_version, get_cudnn_version, get_gpu_name
+from utils import compute_roc_auc, get_cuda_version, get_cudnn_version, get_gpu_name, get_classification_report
 
 ############# CONSTANTS
 MULTI_GPU = False
@@ -257,12 +257,13 @@ def valid_epoch(model, dataloader, criterion, phase='valid', cl=CLASSES):
         out_pred = out_pred.cpu().numpy()[:len(out_gt)]  # Trim padding
         print("Test-Dataset loss: {0:.4f}".format(loss_mean))
         print("Test-Dataset AUC: {0:.4f}".format(compute_roc_auc(out_gt, out_pred, cl)))
+        get_classification_report(out_gt, out_pred, DISEASE_TYPES)
     else:
         print("Validation loss: {0:.4f}".format(loss_mean))
     return loss_mean
 
 
-def save_checkpoint(epoch, model, optimizer, loss_val, is_best):
+def save_checkpoint(epoch, model, optimizer, loss, is_best):
     """Save checkpoint if a new best is achieved"""
     if not is_best:
         print("=> Validation Accuracy did not improve")
@@ -270,16 +271,16 @@ def save_checkpoint(epoch, model, optimizer, loss_val, is_best):
     else:
         print("=> Saving a new best")
 
-        PATH = MODEL_CHKPTS_DIR + 'chkpt_{0}_epoch{1}_loss{2:.4f}_checkpoint.pth.tar'.format(TIMESTAMP, epoch, loss)
+        PATH = MODEL_CHKPTS_DIR + 'checkpoint{0}_epoch{1}_loss{2:.4f}.pth.tar'.format(TIMESTAMP, epoch, loss)
 
         torch.save({
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
-            'loss': loss_val,
+            'loss': loss,
         }, PATH)
 
-    logging.info('epoch:{0},val:{1:.4f}'.format(epoch, loss_val))
+    logging.info('epoch:{0},val:{1:.4f}'.format(epoch, loss))
 
 
 def main():
