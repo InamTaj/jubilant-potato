@@ -25,14 +25,39 @@ from PIL import Image
 from utils import compute_roc_auc, get_cuda_version, get_cudnn_version, get_gpu_name, get_classification_report
 
 ############# CONSTANTS
-MULTI_GPU = False
+LR = 0.0001
+BATCHSIZE = 4
+EPOCHS = 10
 
 WIDTH = 1024
 HEIGHT = 1024
+
+
+MULTI_GPU = False
+
+print("OS: ", sys.platform)
+print("Python: ", sys.version)
+print("PyTorch: ", torch.__version__)
+print("Numpy: ", np.__version__)
+print("GPU: ", get_gpu_name())
+print(get_cuda_version())
+print("CuDNN Version ", get_cudnn_version())
+
+CPU_COUNT = multiprocessing.cpu_count()
+GPU_COUNT = len(get_gpu_name())
+print("CPUs: ", CPU_COUNT)
+print("GPUs: ", GPU_COUNT)
+
+# Manually scale to multi-gpu
+assert torch.cuda.is_available()
+_DEVICE = torch.device('cuda:0')
+# enables cudnn's auto-tuner
+torch.backends.cudnn.benchmark = True
+if MULTI_GPU:
+    LR *= GPU_COUNT
+    BATCHSIZE *= GPU_COUNT
+
 CHANNELS = 3
-LR = 0.0001
-EPOCHS = 2
-BATCHSIZE = 4
 
 IMAGENET_RGB_MEAN_TORCH = [0.485, 0.456, 0.406]
 IMAGENET_RGB_SD_TORCH = [0.229, 0.224, 0.225]
@@ -97,31 +122,6 @@ handler.setFormatter(formatter)
 # add the file handler to the logger
 logger.addHandler(handler)
 ########################
-
-
-def show_setup_details():
-    print("OS: ", sys.platform)
-    print("Python: ", sys.version)
-    print("PyTorch: ", torch.__version__)
-    print("Numpy: ", np.__version__)
-    print("GPU: ", get_gpu_name())
-    print(get_cuda_version())
-    print("CuDNN Version ", get_cudnn_version())
-
-    CPU_COUNT = multiprocessing.cpu_count()
-    GPU_COUNT = len(get_gpu_name())
-    print("CPUs: ", CPU_COUNT)
-    print("GPUs: ", GPU_COUNT)
-
-    # Manually scale to multi-gpu
-    assert torch.cuda.is_available()
-    _DEVICE = torch.device('cuda:0')
-    # enables cudnn's auto-tuner
-    torch.backends.cudnn.benchmark = True
-    if MULTI_GPU:
-        LR *= GPU_COUNT
-        BATCHSIZE *= GPU_COUNT
-
 
 class ChestXrayDataSet(Dataset):
     def __init__(self, data_dir, image_list_file, transform=None):
@@ -284,7 +284,6 @@ def save_checkpoint(epoch, model, optimizer, loss, is_best):
 
 
 def main():
-    show_setup_details()
 
     # Normalise by imagenet mean/sd
     normalize = transforms.Normalize(IMAGENET_RGB_MEAN_TORCH,
@@ -305,14 +304,16 @@ def main():
     test_dataset = no_augmentation_dataset(DATA_DIR, TEST_IMAGES_LIST, normalize)
 
     # Optimal to use fewer workers than CPU_COUNT
+    workers = 1 if CPU_COUNT < 2 else CPU_COUNT - 1
+
     # DataLoaders
     train_loader = DataLoader(dataset=train_dataset, batch_size=BATCHSIZE,
-                              shuffle=True, num_workers=1, pin_memory=True)
+                              shuffle=True, num_workers=workers, pin_memory=True)
     # Using a bigger batch-size (than BATCHSIZE) for below worsens performance
     valid_loader = DataLoader(dataset=valid_dataset, batch_size=BATCHSIZE,
-                              shuffle=False, num_workers=1, pin_memory=True)
+                              shuffle=False, num_workers=workers, pin_memory=True)
     test_loader = DataLoader(dataset=test_dataset, batch_size=BATCHSIZE,
-                             shuffle=False, num_workers=1, pin_memory=True)
+                             shuffle=False, num_workers=workers, pin_memory=True)
 
     # Load symbol
     chexnet_sym = get_symbol()
