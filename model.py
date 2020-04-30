@@ -33,7 +33,7 @@ WIDTH = 1024
 HEIGHT = 1024
 
 
-MULTI_GPU = False
+MULTI_GPU = True
 
 print("OS: ", sys.platform)
 print("Python: ", sys.version)
