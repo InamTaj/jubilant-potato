@@ -4,8 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 def main():
-    filename = 'losses_27.04.2020_04.45.07'
-    theFrame = pd.read_csv(filename + '.log', names=['epochs', 'losses'])
+    prefix = './model/'
+    filename = prefix + 'losses_30.04.2020_15.14.19.log'
+    theFrame = pd.read_csv(filename, names=['epochs', 'losses'])
 
     EPOCHS = set()
     TRAIN_LOSS = []
