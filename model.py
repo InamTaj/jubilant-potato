@@ -316,7 +316,7 @@ def main():
                              shuffle=False, num_workers=workers, pin_memory=True)
 
     # Load symbol
-    chexnet_sym = get_symbol(MULTI_GPU)
+    chexnet_sym = get_symbol(CLASSES, MULTI_GPU)
     summary(chexnet_sym, input_data=(CHANNELS, HEIGHT, WIDTH))
 
     # Load optimiser, loss
