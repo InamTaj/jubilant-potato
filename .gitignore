@@ -143,9 +143,9 @@ dmypy.json
 
 model
 images
-labels
 datasets/chexnet/*
 datasets/gulab-devi/*
 
 # exceptions
 !datasets/chexnet/full_labels
+!datasets/chexnet/labels
