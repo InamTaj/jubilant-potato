@@ -92,7 +92,7 @@ def main_train():
     if PRETRAINED_MODEL_PATH != None:
         try:
             # loads checkpoint file
-            chkpt = torch.load(MODEL_CHKPTS_DIR + PRETRAINED_MODEL_PATH)
+            chkpt = torch.load(PRETRAINED_MODEL_PATH)
             # loads model weights
             chexnet_sym.load_state_dict(chkpt['model_state_dict'])
             # loads optimizer
