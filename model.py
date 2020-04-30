@@ -26,7 +26,7 @@ from utils import compute_roc_auc, get_cuda_version, get_cudnn_version, get_gpu_
 
 ############# CONSTANTS
 LR = 0.0001
-BATCHSIZE = 4
+BATCHSIZE = 2
 EPOCHS = 100
 
 WIDTH = 1024
@@ -185,6 +185,7 @@ def get_symbol(out_features=CLASSES, multi_gpu=MULTI_GPU):
         nn.Linear(model.classifier.in_features, out_features),
         nn.Sigmoid())
     if multi_gpu:
+        print('>>>>>> expanding to multiple GPUs !!')
         model = nn.DataParallel(model)
     # CUDA
     model.to(_DEVICE)
@@ -317,7 +318,7 @@ def main():
 
     # Load symbol
     chexnet_sym = get_symbol(CLASSES, MULTI_GPU)
-    summary(chexnet_sym, input_data=(CHANNELS, HEIGHT, WIDTH))
+    # summary(chexnet_sym, input_data=(CHANNELS, HEIGHT, WIDTH))
 
     # Load optimiser, loss
     # Scheduler for LRPlateau is not used
