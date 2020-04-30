@@ -27,7 +27,7 @@ from utils import compute_roc_auc, get_cuda_version, get_cudnn_version, get_gpu_
 ############# CONSTANTS
 LR = 0.0001
 BATCHSIZE = 4
-EPOCHS = 10
+EPOCHS = 100
 
 WIDTH = 1024
 HEIGHT = 1024
@@ -304,7 +304,7 @@ def main():
     test_dataset = no_augmentation_dataset(DATA_DIR, TEST_IMAGES_LIST, normalize)
 
     # Optimal to use fewer workers than CPU_COUNT
-    workers = 1 if CPU_COUNT < 2 else 2
+    workers = 1 if CPU_COUNT < 2 else 4
 
     # DataLoaders
     train_loader = DataLoader(dataset=train_dataset, batch_size=BATCHSIZE,
@@ -316,7 +316,7 @@ def main():
                              shuffle=False, num_workers=workers, pin_memory=True)
 
     # Load symbol
-    chexnet_sym = get_symbol()
+    chexnet_sym = get_symbol(MULTI_GPU)
     summary(chexnet_sym, input_data=(CHANNELS, HEIGHT, WIDTH))
 
     # Load optimiser, loss
