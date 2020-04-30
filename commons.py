@@ -156,7 +156,7 @@ def valid_epoch(model, dataloader, criterion, phase='valid', cl=CLASSES):
         out_pred = out_pred.cpu().numpy()[:len(out_gt)]  # Trim padding
         print("Test-Dataset loss: {0:.4f}".format(loss_mean))
         print("Test-Dataset AUC: {0:.4f}".format(compute_roc_auc(out_gt, out_pred, cl)))
-        get_classification_report(out_gt, out_pred, DISEASE_TYPES)
+        # get_classification_report(out_gt, out_pred, DISEASE_TYPES)
     else:
         print("Validation loss: {0:.4f}".format(loss_mean))
     return loss_mean
