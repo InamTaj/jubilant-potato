@@ -118,7 +118,7 @@ def main_train():
 
         is_best = bool(loss_val < best_loss_val)
         best_loss_val = min(loss_val, best_loss_val)
-        save_checkpoint(epoch_num, chexnet_sym, optimizer, loss_val, is_best, current_lr, logger)
+        save_checkpoint(epoch_num, chexnet_sym, optimizer, loss_val, is_best, logger)
         # decay Learning Rate
         # Note that step should be called after validate()
         scheduler.step(best_loss_val)

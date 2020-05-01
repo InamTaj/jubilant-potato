@@ -162,7 +162,7 @@ def valid_epoch(model, dataloader, criterion, phase='valid', cl=CLASSES):
     return loss_mean
 
 
-def save_checkpoint(epoch, model, optimizer, loss, is_best, current_lr, logger):
+def save_checkpoint(epoch, model, optimizer, val_loss, is_best, logger):
     """Save checkpoint if a new best is achieved"""
     if not is_best:
         print("=> Validation Accuracy did not improve")
@@ -170,14 +170,13 @@ def save_checkpoint(epoch, model, optimizer, loss, is_best, current_lr, logger):
     else:
         print("=> Saving a new best")
 
-        PATH = MODEL_CHKPTS_DIR + 'ckpt{0}_epoch{1}_loss{2:.2f}.pth.tar'.format(TIMESTAMP, epoch, loss)
+        PATH = MODEL_CHKPTS_DIR + 'ckpt{0}_epoch{1}_loss{2:.2f}.pth.tar'.format(TIMESTAMP, epoch, val_loss)
 
         torch.save({
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
-            'loss': loss,
-            'current_lr': current_lr,
+            'val_loss': val_loss,
         }, PATH)
 
-    logger.info('epoch:{0},val:{1:.4f}'.format(epoch, loss))
+    logger.info('epoch:{0},val:{1:.4f}'.format(epoch, val_loss))
