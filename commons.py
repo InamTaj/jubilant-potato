@@ -12,7 +12,7 @@ from torchsummary import summary
 
 from PIL import Image
 
-from constants import LR, WIDTH, HEIGHT, CHANNELS, MULTI_GPU, CLASSES, DISEASE_TYPES, TIMESTAMP, MODEL_CHKPTS_DIR
+from constants import LR, WIDTH, HEIGHT, CHANNELS, MULTI_GPU, CLASSES, TIMESTAMP, MODEL_CHKPTS_DIR
 from utils import compute_roc_auc, get_classification_report
 
 
@@ -176,7 +176,7 @@ def save_checkpoint(epoch, model, optimizer, val_loss, is_best, logger):
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
-            'val_loss': val_loss,
+            'loss': val_loss,
         }, PATH)
 
     logger.info('epoch:{0},val:{1:.4f}'.format(epoch, val_loss))

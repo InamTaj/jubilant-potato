@@ -36,9 +36,8 @@ MODEL_CHKPTS_DIR = MODEL_DIR + 'checkpoints/'
 MODEL_LOGS_DIR   = MODEL_DIR  + 'losses_{}.log'.format(TIMESTAMP)
 
 # should be a complete path,
-# e.g., PRETRAINED_MODEL_PATH = 'epoch1_loss0.4352886577447255_checkpoint.pth.tar'
-PRETRAINED_MODEL_PATH = None
-# PRETRAINED_MODEL_PATH = MODEL_CHKPTS_DIR + ''
+# PRETRAINED_MODEL_PATH = None
+PRETRAINED_MODEL_PATH = MODEL_CHKPTS_DIR + 'checkpoint30.04.2020_15.14.19_epoch13_loss0.1476.pth.tar'
 
 CLASS_NAMES = [
     'infiltration',

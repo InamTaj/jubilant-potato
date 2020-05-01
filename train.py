@@ -88,6 +88,9 @@ def main_train():
     # Scheduler for LRPlateau is not used
     optimizer, criterion, scheduler = init_symbol(chexnet_sym)
 
+    # best validation loss
+    best_loss_val = None
+
     # Load pre-trained weights and optimizer if available
     if PRETRAINED_MODEL_PATH != None:
         try:
@@ -97,6 +100,8 @@ def main_train():
             chexnet_sym.load_state_dict(chkpt['model_state_dict'])
             # loads optimizer
             optimizer.load_state_dict(chkpt['optimizer_state_dict'])
+            # load best validation loss
+            best_loss_val = chkpt['loss']
             # notify
             print('=> Loaded pre-trained model successfully from: {0}'.format(PRETRAINED_MODEL_PATH))
         except Exception as ex:
@@ -106,13 +111,14 @@ def main_train():
         print('=> Starting Training from scratch!')
 
     ############################################################### TRAINING LOOP
-    best_loss_val = 10000  # initial value set to a big number
+    if best_loss_val is None: # if no best val was found
+        best_loss_val = 10000  # initial value set to a big number
 
     for j in range(EPOCHS):
         stime = time.time()
         epoch_num = j + 1  # to cater for 0 index in logs
         current_lr = optimizer.param_groups[0]['lr']
-        print('---+---+--- Epoch #{0} of {1} | LR: {2} ---+---+---'.format(epoch_num, EPOCHS, current_lr))
+        print('---+---+--- Epoch #{0}/{1} | LR: {2} ---+---+---'.format(epoch_num, EPOCHS, current_lr))
         train_epoch(chexnet_sym, train_loader, optimizer, criterion, epoch_num, logger)
         loss_val = valid_epoch(chexnet_sym, valid_loader, criterion)
 

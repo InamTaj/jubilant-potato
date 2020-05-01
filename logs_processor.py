@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 def main():
     prefix = './model/'
-    filename = prefix + 'logs_chexnet.log'
+    filename = prefix + 'losses_30.04.2020_15.14.19.log'
     theFrame = pd.read_csv(filename, names=['epochs', 'losses'])
 
     EPOCHS = set()
