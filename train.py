@@ -111,7 +111,7 @@ def main_train():
     for j in range(EPOCHS):
         stime = time.time()
         epoch_num = j + 1  # to cater for 0 index in logs
-        current_lr = scheduler.get_lr()
+        current_lr = optimizer.param_groups[0]['lr']
         print('---+---+--- Epoch #{0} of {1} | LR: {2} ---+---+---'.format(epoch_num, EPOCHS, current_lr))
         train_epoch(chexnet_sym, train_loader, optimizer, criterion, epoch_num, logger)
         loss_val = valid_epoch(chexnet_sym, valid_loader, criterion)
