@@ -86,7 +86,7 @@ def main_train():
 
     # Load optimiser, loss
     # Scheduler for LRPlateau is not used
-    optimizer, criterion, _ = init_symbol(chexnet_sym)
+    optimizer, criterion, scheduler = init_symbol(chexnet_sym)
 
     # Load pre-trained weights and optimizer if available
     if PRETRAINED_MODEL_PATH != None:
@@ -111,13 +111,17 @@ def main_train():
     for j in range(EPOCHS):
         stime = time.time()
         epoch_num = j + 1  # to cater for 0 index in logs
-        print('---+---+--- Epoch #{0} of {1} ---+---+---'.format(epoch_num, EPOCHS))
+        current_lr = scheduler.get_lr()
+        print('---+---+--- Epoch #{0} of {1} | LR: {2} ---+---+---'.format(epoch_num, EPOCHS, current_lr))
         train_epoch(chexnet_sym, train_loader, optimizer, criterion, epoch_num, logger)
         loss_val = valid_epoch(chexnet_sym, valid_loader, criterion)
 
         is_best = bool(loss_val < best_loss_val)
         best_loss_val = min(loss_val, best_loss_val)
-        save_checkpoint(epoch_num, chexnet_sym, optimizer, loss_val, is_best, logger)
+        save_checkpoint(epoch_num, chexnet_sym, optimizer, loss_val, is_best, current_lr, logger)
+        # decay Learning Rate
+        # Note that step should be called after validate()
+        scheduler.step(best_loss_val)
 
         print("Epoch time: {0:.0f} seconds".format(time.time() - stime))
 

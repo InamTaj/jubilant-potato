@@ -5,7 +5,7 @@ import torchvision.transforms as transforms
 
 
 LR = 0.0001
-BATCHSIZE = 20
+BATCHSIZE = 16
 EPOCHS = 100
 
 WIDTH = 448
@@ -14,7 +14,7 @@ CHANNELS = 3
 
 CPU_COUNT = multiprocessing.cpu_count()
 # Optimal to use fewer workers than CPU_COUNT
-NUM_WORKERS = 1 if CPU_COUNT < 2 else 5
+NUM_WORKERS = 1 if CPU_COUNT < 2 else 4
 
 # check for multiple GPUs
 MULTI_GPU = True if torch.cuda.device_count() > 1 else False

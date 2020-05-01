@@ -75,7 +75,7 @@ def init_symbol(sym, lr=LR):
     # BCE Loss since classes not mutually exclusive + Sigmoid FC-layer
     cri = nn.BCELoss()
     opt = optim.Adam(sym.parameters(), lr=lr, betas=(0.9, 0.999))
-    sch = ReduceLROnPlateau(opt, factor=0.1, patience=5, mode='min')
+    sch = ReduceLROnPlateau(opt, factor=0.1, patience=2, mode='min')
     return opt, cri, sch
 
 
@@ -162,7 +162,7 @@ def valid_epoch(model, dataloader, criterion, phase='valid', cl=CLASSES):
     return loss_mean
 
 
-def save_checkpoint(epoch, model, optimizer, loss, is_best, logger):
+def save_checkpoint(epoch, model, optimizer, loss, is_best, current_lr, logger):
     """Save checkpoint if a new best is achieved"""
     if not is_best:
         print("=> Validation Accuracy did not improve")
@@ -170,13 +170,14 @@ def save_checkpoint(epoch, model, optimizer, loss, is_best, logger):
     else:
         print("=> Saving a new best")
 
-        PATH = MODEL_CHKPTS_DIR + 'checkpoint{0}_epoch{1}_loss{2:.4f}.pth.tar'.format(TIMESTAMP, epoch, loss)
+        PATH = MODEL_CHKPTS_DIR + 'ckpt{0}_epoch{1}_loss{2:.2f}.pth.tar'.format(TIMESTAMP, epoch, loss)
 
         torch.save({
             'epoch': epoch,
             'model_state_dict': model.state_dict(),
             'optimizer_state_dict': optimizer.state_dict(),
             'loss': loss,
+            'current_lr': current_lr,
         }, PATH)
 
     logger.info('epoch:{0},val:{1:.4f}'.format(epoch, loss))
