@@ -30,9 +30,9 @@ def runTrain():
     #---- Paths to the files with training, validation and testing sets.
     #---- Each file should contains pairs [path to image, output vector]
     #---- Example: images_011/00027736_001.png 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-    pathFileTrain = '../datasets/labels/train_list.txt'
-    pathFileVal = '../datasets/labels/val_list.txt'
-    pathFileTest = '../datasets/labels/test_list.txt'
+    pathFileTrain = '../datasets/chexnet/labels/train_list.txt'
+    pathFileVal = '../datasets/chexnet/labels/val_list.txt'
+    pathFileTest = '../datasets/chexnet/labels/test_list.txt'
 
     #---- Neural network parameters: type of the network, is it pre-trained 
     #---- on imagenet, number of classes
@@ -61,7 +61,7 @@ def runTrain():
 def runTest():
     
     pathDirData = '../datasets/chexnet/images/'
-    pathFileTest = '../datasets/labels/test_list.txt'
+    pathFileTest = '../datasets/chexnet/labels/test_list.txt'
     nnArchitecture = 'DENSE-NET-121'
     nnIsTrained = True
     nnClassCount = 14
