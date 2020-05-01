@@ -60,8 +60,8 @@ def runTrain():
 
 def runTest():
     
-    pathDirData = './database'
-    pathFileTest = './dataset/test_1.txt'
+    pathDirData = '../datasets/chexnet/images/'
+    pathFileTest = '../datasets/labels/test_list.txt'
     nnArchitecture = 'DENSE-NET-121'
     nnIsTrained = True
     nnClassCount = 14
@@ -69,7 +69,7 @@ def runTest():
     imgtransResize = 256
     imgtransCrop = 224
     
-    pathModel = './models/m-25012018-123527.pth.tar'
+    pathModel = '../model/checkpoints/m-25012018-123527.pth.tar'
     
     timestampLaunch = ''
     
