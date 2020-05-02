@@ -86,7 +86,8 @@ class ChexnetTrainer ():
         lossMIN = 100000
         
         for epochID in range (0, trMaxEpoch):
-            
+            stime = time.time()
+
             timestampTime = time.strftime("%H%M%S")
             timestampDate = time.strftime("%d%m%Y")
             timestampSTART = timestampDate + '-' + timestampTime
@@ -106,7 +107,9 @@ class ChexnetTrainer ():
                 print ('Epoch [' + str(epochID + 1) + '] [save] [' + timestampEND + '] loss= ' + str(lossVal))
             else:
                 print ('Epoch [' + str(epochID + 1) + '] [----] [' + timestampEND + '] loss= ' + str(lossVal))
-                     
+
+            print("Epoch time: {0:.0f} seconds".format(time.time() - stime))
+
     #-------------------------------------------------------------------------------- 
        
     def epochTrain (model, dataLoader, optimizer, scheduler, epochMax, classCount, loss):
