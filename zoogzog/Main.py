@@ -69,12 +69,14 @@ def runTest():
     imgtransResize = 256
     imgtransCrop = 224
     
-    pathModel = './models/m-25012018-123527.pth.tar'
+    pathModel = None # './models/m-25012018-123527.pth.tar'
     
     timestampLaunch = ''
-    
-    ChexnetTrainer.test(pathDirData, pathFileTest, pathModel, nnArchitecture, nnClassCount, nnIsTrained, trBatchSize, imgtransResize, imgtransCrop, timestampLaunch)
 
+    if pathModel is not None:
+        ChexnetTrainer.test(pathDirData, pathFileTest, pathModel, nnArchitecture, nnClassCount, nnIsTrained, trBatchSize, imgtransResize, imgtransCrop, timestampLaunch)
+    else:
+        print('ERROR: No model found at: {0}'.format(pathModel))
 #-------------------------------------------------------------------------------- 
 
 if __name__ == '__main__':
