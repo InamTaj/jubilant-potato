@@ -1,19 +1,19 @@
 #!/usr/local/bin/python3
 
-import os, glob
-import tqdm
+import os
+import pandas as pd
 
 ################## CONSTANTS
 CHEXNET_DIR = r'./datasets/chexnet/'
 IMAGES_DIR = CHEXNET_DIR + 'images'
 LABELS_DIR = CHEXNET_DIR + 'labels'
-AVAILABLE_LABELS_DIR = CHEXNET_DIR + 'available_labels'
+AVAILABLE_LABELS_DIR = CHEXNET_DIR + 'bruce_labels'
 TRAIN_LIST = LABELS_DIR + '/train_list.txt'
 VAL_LIST = LABELS_DIR + '/val_list.txt'
 TEST_LIST = LABELS_DIR + '/test_list.txt'
-AVAILABLE_TRAIN_LIST = AVAILABLE_LABELS_DIR + '/train_list.txt'
-AVAILABLE_VAL_LIST = AVAILABLE_LABELS_DIR + '/val_list.txt'
-AVAILABLE_TEST_LIST = AVAILABLE_LABELS_DIR + '/test_list.txt'
+AVAILABLE_TRAIN_LIST = AVAILABLE_LABELS_DIR + '/train.csv'
+AVAILABLE_VAL_LIST = AVAILABLE_LABELS_DIR + '/val.csv'
+AVAILABLE_TEST_LIST = AVAILABLE_LABELS_DIR + '/test.csv'
 
 if not os.path.exists(AVAILABLE_LABELS_DIR):
     os.makedirs(AVAILABLE_LABELS_DIR)
@@ -37,21 +37,18 @@ def process_labels(INPUT_LIST, OUTPUT_FILE):
 
     # filter labels
     for each in LABELS:
-        img_name = each.split(' ')[0]
+        splitted = each.split(' ')
+        img_name = splitted[0]
 
         try:
             if FILES_LOOKUP[img_name] != None:
-                FILTERED_LIST.append(each)
+                FILTERED_LIST.append(splitted)
         except KeyError:
             pass
 
     # finally write to file
-    if len(FILTERED_LIST) > 0:
-        file = open(OUTPUT_FILE, 'w+')
-
-        for line in FILTERED_LIST:
-            to_write = line + '\n'
-            file.write(to_write)
+    dF = pd.DataFrame(FILTERED_LIST, columns=['Image Index', 'Atelectasis', 'Cardiomegaly', 'Effusion', 'Infiltration', 'Mass', 'Nodule', 'Pneumonia', 'Pneumothorax', 'Consolidation', 'Edema', 'Emphysema', 'Fibrosis', 'Pleural_Thickening', 'Hernia'])
+    dF.to_csv(OUTPUT_FILE, sep=',')
 
 
 def main():
