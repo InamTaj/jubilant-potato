@@ -47,8 +47,10 @@ def process_labels(INPUT_LIST, OUTPUT_FILE):
             pass
 
     # finally write to file
-    dF = pd.DataFrame(FILTERED_LIST, columns=['Image Index', 'Atelectasis', 'Cardiomegaly', 'Effusion', 'Infiltration', 'Mass', 'Nodule', 'Pneumonia', 'Pneumothorax', 'Consolidation', 'Edema', 'Emphysema', 'Fibrosis', 'Pleural_Thickening', 'Hernia'])
-    dF.to_csv(OUTPUT_FILE, sep=',')
+    col_names = ['Image Index', 'Atelectasis', 'Cardiomegaly', 'Effusion', 'Infiltration', 'Mass', 'Nodule', 'Pneumonia', 'Pneumothorax', 'Consolidation', 'Edema', 'Emphysema', 'Fibrosis', 'Pleural_Thickening', 'Hernia']
+    dF = pd.DataFrame(FILTERED_LIST, columns=col_names)
+    print(dF.head())
+    dF.to_csv(OUTPUT_FILE, sep=',', header=col_names, index=False)
 
 
 def main():

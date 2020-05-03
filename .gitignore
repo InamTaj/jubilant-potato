@@ -142,6 +142,7 @@ dmypy.json
 *.csv
 
 model
+!model/best_weights.h5
 images
 datasets/chexnet/*
 datasets/gulab-devi/*

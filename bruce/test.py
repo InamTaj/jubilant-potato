@@ -15,6 +15,8 @@ def main():
 
     # default config
     output_dir = cp["DEFAULT"].get("output_dir")
+    labels_dir = cp["DEFAULT"].get("labels_dir")
+
     base_model_name = cp["DEFAULT"].get("base_model_name")
     class_names = cp["DEFAULT"].get("class_names").split(",")
     image_source_dir = cp["DEFAULT"].get("image_source_dir")
@@ -33,7 +35,8 @@ def main():
     best_weights_path = os.path.join(output_dir, f"best_{output_weights_name}")
 
     # get test sample count
-    test_counts, _ = get_sample_counts(output_dir, "test", class_names)
+    test_counts, _ = get_sample_counts(labels_dir, "test", class_names)
+    print(f"** test_counts: {test_counts} **")
 
     # compute steps
     if test_steps == "auto":
@@ -64,7 +67,7 @@ def main():
 
     print("** load test generator **")
     test_sequence = AugmentedImageSequence(
-        dataset_csv_file=os.path.join(output_dir, "dev.csv"),
+        dataset_csv_file=os.path.join(labels_dir, "test.csv"),
         class_names=class_names,
         source_image_dir=image_source_dir,
         batch_size=batch_size,
@@ -77,6 +80,7 @@ def main():
     print("** make prediction **")
     y_hat = model.predict_generator(test_sequence, verbose=1)
     y = test_sequence.get_y_true()
+    print('><<<<<<<<', y, y_hat)
 
     test_log_path = os.path.join(output_dir, "test.log")
     print(f"** write log to {test_log_path} **")
