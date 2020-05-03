@@ -136,7 +136,7 @@ dmypy.json
 .DS_Store
 
 # Model Outputs
-*.h5
+!*.h5
 
 # project artifacts
 *.csv
