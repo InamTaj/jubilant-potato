@@ -71,16 +71,16 @@ def main():
         open(running_flag_file, "a").close()
 
     try:
-        print(f"backup config file to {output_dir}")
-        shutil.copy(config_file, os.path.join(output_dir, os.path.split(config_file)[1]))
+        # print(f"backup config file to {output_dir}")
+        # shutil.copy(config_file, os.path.join(output_dir, os.path.split(config_file)[1]))
 
-        datasets = ["train", "dev", "test"]
-        for dataset in datasets:
-            shutil.copy(os.path.join(dataset_csv_dir, f"{dataset}.csv"), output_dir)
+        # datasets = ["train", "val", "test"]
+        # for dataset in datasets:
+        #     shutil.copy(os.path.join(dataset_csv_dir, f"{dataset}.csv"), output_dir)
 
         # get train/dev sample counts
         train_counts, train_pos_counts = get_sample_counts(output_dir, "train", class_names)
-        dev_counts, _ = get_sample_counts(output_dir, "dev", class_names)
+        dev_counts, _ = get_sample_counts(output_dir, "val", class_names)
 
         # compute steps
         if train_steps == "auto":
@@ -148,7 +148,7 @@ def main():
             steps=train_steps,
         )
         validation_sequence = AugmentedImageSequence(
-            dataset_csv_file=os.path.join(output_dir, "dev.csv"),
+            dataset_csv_file=os.path.join(output_dir, "val.csv"),
             class_names=class_names,
             source_image_dir=image_source_dir,
             batch_size=batch_size,
