@@ -142,11 +142,12 @@ dmypy.json
 *.csv
 
 model
-!model/best_weights.h5
 images
 datasets/chexnet/*
 datasets/gulab-devi/*
 
 # exceptions
+!model/best_weights.h5
 !datasets/chexnet/full_labels
 !datasets/chexnet/labels
+!datasets/gulab-devi/1abels/14-diseases

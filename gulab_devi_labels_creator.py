@@ -4,13 +4,13 @@ import os
 import pandas as pd
 
 ################## CONSTANTS
-CHEXNET_DIR = r'./datasets/chexnet/'
-IMAGES_DIR = CHEXNET_DIR + 'images'
-LABELS_DIR = CHEXNET_DIR + 'labels'
-AVAILABLE_LABELS_DIR = CHEXNET_DIR + 'bruce_labels'
-TRAIN_LIST = LABELS_DIR + '/train_list.txt'
-VAL_LIST = LABELS_DIR + '/val_list.txt'
-TEST_LIST = LABELS_DIR + '/test_list.txt'
+GULABDEVI_DIR = r'./datasets/gulab-devi/'
+IMAGES_DIR = GULABDEVI_DIR + 'images'
+LABELS_DIR = GULABDEVI_DIR + 'labels'
+AVAILABLE_LABELS_DIR = GULABDEVI_DIR + 'available_labels'
+TRAIN_LIST = LABELS_DIR + '/14-diseases/train_list.txt'
+VAL_LIST = LABELS_DIR + '/14-diseases/val_list.txt'
+TEST_LIST = LABELS_DIR + '/14-diseases/test_list.txt'
 AVAILABLE_TRAIN_LIST = AVAILABLE_LABELS_DIR + '/train.csv'
 AVAILABLE_VAL_LIST = AVAILABLE_LABELS_DIR + '/val.csv'
 AVAILABLE_TEST_LIST = AVAILABLE_LABELS_DIR + '/test.csv'

@@ -80,7 +80,6 @@ def main():
     print("** make prediction **")
     y_hat = model.predict_generator(test_sequence, verbose=1)
     y = test_sequence.get_y_true()
-    print('><<<<<<<<', y, y_hat)
 
     test_log_path = os.path.join(output_dir, "test.log")
     print(f"** write log to {test_log_path} **")
