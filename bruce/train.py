@@ -22,6 +22,7 @@ def main():
 
     # default config
     output_dir = cp["DEFAULT"].get("output_dir")
+    labels_dir = cp["DEFAULT"].get("labels_dir")
     image_source_dir = cp["DEFAULT"].get("image_source_dir")
     base_model_name = cp["DEFAULT"].get("base_model_name")
     class_names = cp["DEFAULT"].get("class_names").split(",")
@@ -79,8 +80,8 @@ def main():
         #     shutil.copy(os.path.join(dataset_csv_dir, f"{dataset}.csv"), output_dir)
 
         # get train/dev sample counts
-        train_counts, train_pos_counts = get_sample_counts(output_dir, "train", class_names)
-        dev_counts, _ = get_sample_counts(output_dir, "val", class_names)
+        train_counts, train_pos_counts = get_sample_counts(labels_dir, "train", class_names)
+        dev_counts, _ = get_sample_counts(labels_dir, "val", class_names)
 
         # compute steps
         if train_steps == "auto":
@@ -139,7 +140,7 @@ def main():
 
         print("** create image generators **")
         train_sequence = AugmentedImageSequence(
-            dataset_csv_file=os.path.join(output_dir, "train.csv"),
+            dataset_csv_file=os.path.join(labels_dir, "train.csv"),
             class_names=class_names,
             source_image_dir=image_source_dir,
             batch_size=batch_size,
@@ -148,7 +149,7 @@ def main():
             steps=train_steps,
         )
         validation_sequence = AugmentedImageSequence(
-            dataset_csv_file=os.path.join(output_dir, "val.csv"),
+            dataset_csv_file=os.path.join(labels_dir, "val.csv"),
             class_names=class_names,
             source_image_dir=image_source_dir,
             batch_size=batch_size,
