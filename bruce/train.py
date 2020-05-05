@@ -13,6 +13,19 @@ from utility import get_sample_counts
 from weights import get_class_weights
 from augmenter import augmenter
 
+def insert_intermediate_layer_in_keras(model, layer_id, new_layer):
+    from keras.models import Model
+
+    layers = [l for l in model.layers]
+
+    x = layers[0].output
+    for i in range(1, len(layers)):
+        if i == layer_id:
+            x = new_layer(x)
+        x = layers[i](x)
+
+    new_model = Model(input=layers[0].input, output=x)
+    return new_model
 
 def main():
     # parser config
@@ -134,6 +147,14 @@ def main():
             use_base_weights=use_base_model_weights,
             weights_path=model_weights_file,
             input_shape=(image_dimension, image_dimension, 3))
+
+        ##################################
+        # stop training of all layers
+        for layer in model.layers[:-1]:
+            layer.trainable = False
+
+        model = insert_intermediate_layer_in_keras(model, len(model.layers)-2, keras.layers.Dense(1024, activation='sigmoid'))
+        ##################################
 
         if show_model_summary:
             print(model.summary())
