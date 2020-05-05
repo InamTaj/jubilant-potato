@@ -173,6 +173,7 @@ def main():
                 base_model=model,
             )
         else:
+            print(f"** multi_gpu_model is not used! gpus={gpus} **")
             model_train = model
             checkpoint = ModelCheckpoint(
                  output_weights_path,
@@ -197,7 +198,7 @@ def main():
                           restore_best_weights=True),
             CSVLogger(filename=os.path.join(output_dir, 'training.log'), separator=','),
             TensorBoard(log_dir=os.path.join(output_dir, "logs"), batch_size=batch_size),
-            ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=patience_reduce_lr,
+            ReduceLROnPlateau(monitor='val_accuracy', factor=0.1, patience=patience_reduce_lr,
                               verbose=1, mode="min", min_lr=min_lr),
             auroc,
         ]
