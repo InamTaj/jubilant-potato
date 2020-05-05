@@ -12,6 +12,7 @@ from models.keras import ModelFactory
 from utility import get_sample_counts
 from weights import get_class_weights
 from augmenter import augmenter
+import keras
 
 def insert_intermediate_layer_in_keras(model, layer_id, new_layer):
     from keras.models import Model
