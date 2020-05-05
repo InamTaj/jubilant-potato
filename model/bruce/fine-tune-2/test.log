@@ -1,0 +1,16 @@
+Atelectasis: 0
+Cardiomegaly: 0
+Effusion: 0
+Infiltration: 0.7058934287328187
+Mass: 0
+Nodule: 0
+Pneumonia: 0
+Pneumothorax: 0
+Consolidation: 0.8192120885051268
+Edema: 0
+Emphysema: 0
+Fibrosis: 0
+Pleural_Thickening: 0.8744827586206897
+Hernia: 0
+-------------------------
+mean auroc: 0.799862758619545
