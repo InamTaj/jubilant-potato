@@ -151,10 +151,10 @@ def main():
 
         ##################################
         # stop training of all layers
-        for layer in model.layers[:-1]:
-            layer.trainable = False
-
-        model = insert_intermediate_layer_in_keras(model, len(model.layers)-2, keras.layers.Dense(1024, activation='sigmoid'))
+        # for layer in model.layers[:-1]:
+        #     layer.trainable = False
+        #
+        # model = insert_intermediate_layer_in_keras(model, len(model.layers)-2, keras.layers.Dense(1024, activation='sigmoid'))
         ##################################
 
         if show_model_summary:
