@@ -5,7 +5,7 @@ import pickle
 from callback import MultipleClassAUROC, MultiGPUModelCheckpoint
 from configparser import ConfigParser
 from generator import AugmentedImageSequence
-from keras.callbacks import ModelCheckpoint, TensorBoard, ReduceLROnPlateau
+from keras.callbacks import ModelCheckpoint, TensorBoard, ReduceLROnPlateau, EarlyStopping, CSVLogger
 from keras.optimizers import Adam
 from keras.utils import multi_gpu_model
 from models.keras import ModelFactory
@@ -193,6 +193,9 @@ def main():
         )
         callbacks = [
             checkpoint,
+            EarlyStopping(monitor='val_loss', patience=5, verbose=1, mode='min', baseline=None,
+                          restore_best_weights=True),
+            CSVLogger(filename=os.path.join(output_dir, 'training.log'), separator=','),
             TensorBoard(log_dir=os.path.join(output_dir, "logs"), batch_size=batch_size),
             ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=patience_reduce_lr,
                               verbose=1, mode="min", min_lr=min_lr),

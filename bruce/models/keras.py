@@ -85,7 +85,8 @@ class ModelFactory:
             weights=base_weights,
             pooling="avg")
         x = base_model.output
-        predictions = Dense(len(class_names), activation="sigmoid", name="predictions")(x)
+        fine_tune_layer = Dense(1024, activation="sigmoid", name="fine_tune_layer")(x)
+        predictions = Dense(len(class_names), activation="sigmoid", name="predictions")(fine_tune_layer)
         model = Model(inputs=img_input, outputs=predictions)
 
         if weights_path == "":
