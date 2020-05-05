@@ -83,7 +83,7 @@ class ModelFactory:
             input_tensor=img_input,
             input_shape=input_shape,
             weights=base_weights,
-            pooling="max")
+            pooling="avg")
         x = base_model.output
         # fine_tune_layer = Dense(1024, activation="sigmoid", name="fine_tune_layer")(x)
         predictions = Dense(len(class_names), activation="sigmoid", name="predictions")(x)
