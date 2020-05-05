@@ -194,8 +194,7 @@ def main():
         )
         callbacks = [
             checkpoint,
-            EarlyStopping(monitor='val_loss', patience=5, verbose=1, mode='min', baseline=None,
-                          restore_best_weights=True),
+            EarlyStopping(monitor='val_loss', patience=5, verbose=1, mode='min', restore_best_weights=True),
             CSVLogger(filename=os.path.join(output_dir, 'training.log'), separator=','),
             TensorBoard(log_dir=os.path.join(output_dir, "logs"), batch_size=batch_size),
             ReduceLROnPlateau(monitor='val_accuracy', factor=0.1, patience=patience_reduce_lr,
